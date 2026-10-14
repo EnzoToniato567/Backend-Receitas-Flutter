@@ -1,4 +1,4 @@
-# Backend de Receitas Flutter
+# Backend Receitas Flutter
 
 API de receitas feita com Node.js, Express, Prisma e MySQL para consumo no Flutter.
 
