@@ -1,0 +1,15 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Receita {
+  id           Int    @id @default(autoincrement())
+  nome         String
+  ingredientes String @db.Text
+  modo_preparo String @db.Text
+  url_imagem   String @db.Text
+}
