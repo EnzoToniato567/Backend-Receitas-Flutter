@@ -1,16 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
-const { PrismaMariaDb } = require("@prisma/adapter-mariadb");
+const { withAccelerate } = require("@prisma/extension-accelerate");
 
-const databaseUrl = new URL(process.env.DATABASE_URL);
-
-const adapter = new PrismaMariaDb({
-    host: databaseUrl.hostname,
-    port: Number(databaseUrl.port || 3306),
-    user: databaseUrl.username,
-    password: databaseUrl.password,
-    database: databaseUrl.pathname.replace("/", "")
-});
-
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient().$extends(withAccelerate());
 
 module.exports = prisma;
