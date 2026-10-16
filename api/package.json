@@ -4,11 +4,13 @@
   "main": "server.js",
   "scripts": {
     "dev": "node --watch server.js",
-    "start":"node server.js",
-    "postinstall": "prisma migrate dev --name init && prisma generate"
+    "start": "node server.js",
+    "postinstall": "prisma generate",
+    "build": "prisma migrate deploy",
+    "db:migrate": "prisma migrate dev"
   },
   "dependencies": {
-    "@prisma/adapter-mariadb": "^7.10.0",
+    "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",

@@ -1,11 +1,11 @@
 -- CreateTable
-CREATE TABLE `Receita` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `nome` VARCHAR(191) NOT NULL,
-    `ingredientes` VARCHAR(191) NOT NULL,
-    `modo_preparo` VARCHAR(191) NOT NULL,
-    `url_imagem` VARCHAR(191) NOT NULL,
-    `custo` DOUBLE NOT NULL,
+CREATE TABLE "Receita" (
+    "id" SERIAL NOT NULL,
+    "nome" TEXT NOT NULL,
+    "ingredientes" TEXT NOT NULL,
+    "modo_preparo" TEXT NOT NULL,
+    "url_imagem" TEXT NOT NULL,
+    "custo" DOUBLE PRECISION NOT NULL,
 
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    CONSTRAINT "Receita_pkey" PRIMARY KEY ("id")
+);

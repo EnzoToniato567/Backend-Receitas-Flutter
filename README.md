@@ -52,21 +52,24 @@ O `id` não deve ser enviado no cadastro. Para atualizar, envie no corpo apenas 
 ## Executar localmente
 
 1. Configure `DATABASE_URL` no arquivo `api/.env` com a URL de conexão do banco.
-2. Na pasta `api`, instale as dependências e inicie o servidor:
+2. Na pasta `api`, instale as dependências, aplique a migração e inicie o servidor:
 
    ```bash
    npm install
+   npm run db:migrate
    npm run dev
    ```
 
 3. A API ficará disponível em `http://localhost:3000` (ou na porta definida pela variável `PORT`).
 
-O script `postinstall` executa `prisma migrate dev --name init` e `prisma generate` durante a instalação; por isso, o banco precisa estar acessível quando `npm install` for executado.
-
-## Configuração do banco pendente
-
-Antes de conectar ou aplicar migrações, alinhe a configuração do banco: o `schema.prisma` declara `postgresql`, enquanto `migration_lock.toml` declara `mysql`. Além disso, `src/data/prisma.js` importa `@prisma/adapter-pg`, mas o `package.json` lista `@prisma/adapter-mariadb`. O provider, o adapter e a URL em `DATABASE_URL` precisam corresponder ao mesmo banco.
+O `postinstall` gera o Prisma Client. Para criar ou atualizar tabelas localmente, execute `npm run db:migrate` com o banco acessível.
 
 ## Deploy
 
-Há um `vercel.json` na raiz do repositório que encaminha as requisições para `api/index.js`. O deploy deve usar a raiz do repositório como diretório do projeto e precisa de uma variável de ambiente `DATABASE_URL` válida para o banco configurado.
+O arquivo `api/index.js` exporta a aplicação Express para a Vercel. Configure o projeto assim:
+
+1. Defina `api` como **Root Directory** e selecione o preset **Express**.
+2. Configure `DATABASE_URL` nos ambientes desejados com a URL do Prisma Postgres.
+3. Use `npm run build` como **Build Command**. Esse comando executa `prisma migrate deploy` para aplicar as migrações versionadas no banco.
+
+O `postinstall` executa apenas `prisma generate`, sem tentar abrir uma migração de desenvolvimento durante a instalação.

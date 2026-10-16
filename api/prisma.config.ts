@@ -1,10 +1,12 @@
-const { PrismaClient } = require("@prisma/client");
-// const { PrismaMariaDb } = require("@prisma/adapter-mariadb");
-const { PrismaPg } = require("@prisma/adapter-pg");
+import "dotenv/config";
+import { defineConfig, env } from "prisma/config";
 
-// const adapter = new PrismaMariaDb(process.env.DATABASE_URL);
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-
-const prisma = new PrismaClient({ adapter });
-
-module.exports = prisma;
+export default defineConfig({
+  schema: "prisma/schema.prisma",
+  migrations: {
+    path: "prisma/migrations",
+  },
+  datasource: {
+    url: env("DATABASE_URL"),
+  },
+});
