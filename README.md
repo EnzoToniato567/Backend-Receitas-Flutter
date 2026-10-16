@@ -23,17 +23,17 @@ Cada receita tem os seguintes campos:
 | `url_imagem` | texto | URL da imagem |
 | `custo` | número | Custo da receita |
 
-## Rotas
+## Rotas da API
 
-O servidor local usa o prefixo `/receita`:
+| Método | Rota | URL pública na Vercel | Ação |
+| --- | --- | --- | --- |
+| GET | `/` | https://backend-receitas-flutter.vercel.app/ | Informa que a API está online |
+| POST | `/receita/cadastrar` | https://backend-receitas-flutter.vercel.app/receita/cadastrar | Cadastra uma receita |
+| GET | `/receita/listar` | https://backend-receitas-flutter.vercel.app/receita/listar | Lista as receitas |
+| PUT | `/receita/atualizar/:id` | https://backend-receitas-flutter.vercel.app/receita/atualizar/:id | Atualiza uma receita pelo ID |
+| DELETE | `/receita/excluir/:id` | https://backend-receitas-flutter.vercel.app/receita/excluir/:id | Exclui uma receita pelo ID |
 
-| Método | Rota | Ação |
-| --- | --- | --- |
-| GET | `/` | Informa que a API está online |
-| POST | `/receita/cadastrar` | Cadastra uma receita |
-| GET | `/receita/listar` | Lista as receitas |
-| PUT | `/receita/atualizar/:id` | Atualiza uma receita pelo ID |
-| DELETE | `/receita/excluir/:id` | Exclui uma receita pelo ID |
+Para executar localmente, substitua o domínio da Vercel por `http://localhost:3000`.
 
 Exemplo de corpo para cadastro:
 
@@ -63,6 +63,17 @@ O `id` não deve ser enviado no cadastro. Para atualizar, envie no corpo apenas 
 3. A API ficará disponível em `http://localhost:3000` (ou na porta definida pela variável `PORT`).
 
 O `postinstall` gera o Prisma Client. Para criar ou atualizar tabelas localmente, execute `npm run db:migrate` com o banco acessível.
+
+## Testar com Insomnia
+
+Há duas coleções exportadas do Insomnia:
+
+1. [Coleção para testar localmente](./docs/local/Insomnia_2026-10-14-11-30-53.yaml) — usa `http://localhost:3000`.
+2. [Coleção para testar na Vercel](./docs/url_vercel/Insomnia_2026-10-16-10-46-58.yaml) — usa `https://backend-receitas-flutter.vercel.app`.
+
+No Insomnia, importe o arquivo YAML desejado usando **Import/Export → Import Data → From File**. Inicie a API local com `npm run dev` antes de usar a coleção local. A coleção da Vercel chama a API publicada.
+
+Para testar cadastro, use a requisição **Cadastrar** e envie o JSON de exemplo acima. A resposta inclui o `id` criado. Para **Atualizar** ou **Excluir**, substitua o parâmetro `id` pelo ID de uma receita existente; excluir remove permanentemente essa receita do banco.
 
 ## Deploy
 
