@@ -1,89 +1,72 @@
 # Backend Receitas Flutter
 
-API de receitas em Node.js, Express, Prisma 7 e PostgreSQL para consumo no Flutter.
+API REST de receitas, feita com Node.js, Express e Prisma, para uso no aplicativo Flutter.
 
-## Deploy na Vercel
+## Estrutura
 
-1. Envie este repositório para o GitHub, sem incluir arquivos `.env`.
-2. Em [Vercel](https://vercel.com/new), importe o repositório.
-3. Na configuração do projeto, defina somente:
-   - **Root Directory:** `api`
-   - **Framework Preset:** `Express` (ou `Other`, caso não seja detectado)
-   - **Build Command / Install Command / Output Directory:** deixe os valores padrão.
-4. Clique em **Deploy**.
-5. No projeto criado, abra **Storage** → **Connect Database** → **Prisma Postgres** e conecte/crie o banco para este projeto.
-6. Em **Settings** → **Environment Variables**, confirme que `DATABASE_URL` foi adicionada para o ambiente **Production**. Ela é criada automaticamente pela integração do banco; não cadastre uma chave de API nem use uma URL `prisma+postgres://`.
-7. Abra **Deployments** e faça **Redeploy** do deployment mais recente.
+- `api/server.js`: inicia o servidor local.
+- `api/index.js`: exporta a aplicação Express para deploy.
+- `api/src/routes/receita.routes.js`: define as rotas de receitas.
+- `api/src/controllers/receita.controller.js`: implementa as operações da API.
+- `api/prisma/schema.prisma`: define o modelo `Receita`.
 
-O arquivo `api/vercel.json` é o único arquivo de configuração da Vercel necessário. Não crie outro `vercel.json` na raiz do repositório.
+## Modelo de receita
 
-## Criar a tabela no banco da Vercel
+Cada receita tem os seguintes campos:
 
-O CLI da Vercel não exporta valores secret para arquivos locais. Para criar a tabela, obtenha uma conexão direta no Prisma Console:
-
-1. Na Vercel, abra **Storage**, selecione o banco conectado e clique em **Manage in Prisma Console**.
-2. No Prisma Console, abra o banco, clique em **Connect to your database** e depois em **Generate new connection string**.
-3. Copie a conexão **Direct** (começa com `postgres://` e usa `db.prisma.io`), sem compartilhá-la.
-4. Dentro de `api`, substitua os valores `[SENSITIVE]` do `.env` pela conexão copiada:
-
-   ```env
-   DATABASE_URL="postgres://USUARIO:SENHA@db.prisma.io:5432/postgres?sslmode=require"
-   DIRECT_URL="postgres://USUARIO:SENHA@db.prisma.io:5432/postgres?sslmode=require"
-   ```
-
-5. Execute:
-
-   ```bash
-   npx prisma db push
-   ```
-
-`db push` cria a tabela `Receita`. O `.env` é ignorado pelo Git e não deve ser enviado ao repositório.
-
-Depois, teste:
-
-```text
-https://SEU-PROJETO.vercel.app/
-https://SEU-PROJETO.vercel.app/receitas/listar
-```
-
-A segunda URL retorna `[]` quando o banco está conectado, mas ainda não possui receitas.
-
-## Desenvolvimento local
-
-1. Dentro de `api`, crie um `.env` com uma conexão PostgreSQL direta:
-
-   ```env
-   PORT=3000
-   DATABASE_URL="postgresql://USUARIO:SENHA@HOST:5432/BANCO?sslmode=require"
-   ```
-
-2. Instale as dependências, crie a tabela e execute a API:
-
-   ```bash
-   npm install
-   npx prisma db push
-   npm run dev
-   ```
-
-3. Teste em `http://localhost:3000`.
+| Campo | Tipo | Descrição |
+| --- | --- | --- |
+| `id` | inteiro | Gerado automaticamente pelo banco |
+| `nome` | texto | Nome da receita |
+| `ingredientes` | texto | Ingredientes |
+| `modo_preparo` | texto | Instruções de preparo |
+| `url_imagem` | texto | URL da imagem |
+| `custo` | número | Custo da receita |
 
 ## Rotas
 
+O servidor local usa o prefixo `/receita`:
+
 | Método | Rota | Ação |
 | --- | --- | --- |
-| GET | `/` | Testa se a API está online |
-| GET | `/receitas/listar` | Lista as receitas |
-| POST | `/receitas/cadastrar` | Cadastra uma receita |
-| PUT | `/receitas/atualizar/:id` | Atualiza uma receita |
-| DELETE | `/receitas/excluir/:id` | Exclui uma receita |
+| GET | `/` | Informa que a API está online |
+| POST | `/receita/cadastrar` | Cadastra uma receita |
+| GET | `/receita/listar` | Lista as receitas |
+| PUT | `/receita/atualizar/:id` | Atualiza uma receita pelo ID |
+| DELETE | `/receita/excluir/:id` | Exclui uma receita pelo ID |
 
-Exemplo para cadastrar ou atualizar uma receita:
+Exemplo de corpo para cadastro:
 
 ```json
 {
   "nome": "Miojo",
   "ingredientes": "Um pacotinho",
   "modo_preparo": "Ferva a água e cozinhe por dois minutos.",
-  "url_imagem": "https://exemplo.com/miojo.jpg"
+  "url_imagem": "https://exemplo.com/miojo.jpg",
+  "custo": 3.5
 }
 ```
+
+O `id` não deve ser enviado no cadastro. Para atualizar, envie no corpo apenas os campos que deseja alterar.
+
+## Executar localmente
+
+1. Configure `DATABASE_URL` no arquivo `api/.env` com a URL de conexão do banco.
+2. Na pasta `api`, instale as dependências e inicie o servidor:
+
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+3. A API ficará disponível em `http://localhost:3000` (ou na porta definida pela variável `PORT`).
+
+O script `postinstall` executa `prisma migrate dev --name init` e `prisma generate` durante a instalação; por isso, o banco precisa estar acessível quando `npm install` for executado.
+
+## Configuração do banco pendente
+
+Antes de conectar ou aplicar migrações, alinhe a configuração do banco: o `schema.prisma` declara `postgresql`, enquanto `migration_lock.toml` declara `mysql`. Além disso, `src/data/prisma.js` importa `@prisma/adapter-pg`, mas o `package.json` lista `@prisma/adapter-mariadb`. O provider, o adapter e a URL em `DATABASE_URL` precisam corresponder ao mesmo banco.
+
+## Deploy
+
+Há um `vercel.json` na raiz do repositório que encaminha as requisições para `api/index.js`. O deploy deve usar a raiz do repositório como diretório do projeto e precisa de uma variável de ambiente `DATABASE_URL` válida para o banco configurado.

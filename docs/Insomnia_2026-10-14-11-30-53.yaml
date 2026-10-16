@@ -776,12 +776,12 @@ collection:
       sortKey: -1791987571952
       description: ""
     children:
-      - url: http://localhost:3000/receitas/listar
+      - url: http://localhost:3000/receita/listar
         name: Listar
         meta:
           id: req_09a7e783855642ec96bdd7443536b6bc
           created: 1791987581132
-          modified: 1791987762052
+          modified: 1792154397599
           isPrivate: false
           description: ""
           sortKey: -1791987581132
@@ -794,12 +794,12 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://localhost:3000/receitas/cadastrar
+      - url: http://localhost:3000/receita/cadastrar
         name: Cadastrar
         meta:
           id: req_78a438a937094246ad7f58abd8f89cae
           created: 1791987592339
-          modified: 1791988223257
+          modified: 1792154597569
           isPrivate: false
           description: ""
           sortKey: -1790171672065.5
@@ -811,7 +811,8 @@ collection:
               "nome": "Miojo",
               "ingredientes": "Um pacotinho",
               "modo_preparo": "Ferva a água e coloque o macarrão por dois minutos.",
-              "url_imagem": "https://exemplo.com/miojo.jpg"
+              "url_imagem": "https://exemplo.com/miojo.jpg",
+            	"custo": 34.99
             }
         headers:
           - name: Content-Type
@@ -824,12 +825,12 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://localhost:3000/receitas/atualizar/:id
+      - url: http://localhost:3000/receita/atualizar/2
         name: Atualizar
         meta:
           id: req_e21df06f56814536952a37869aa16882
           created: 1791987599009
-          modified: 1791988212682
+          modified: 1792156130108
           isPrivate: false
           description: ""
           sortKey: -1789263717532.25
@@ -841,8 +842,9 @@ collection:
             		"nome": "Miojo",
             		"ingredientes": "Um pacotinho",
             		"modo_preparo": "Ferva a água e coloque o macarrão por dois minutos.",
-            		"url_imagem": "https://exemplo.com/miojo.jpg"
-            	}
+            		"url_imagem": "https://exemplo.com/miojo.jpg",
+            		"custo": 35.00
+            }
         headers:
           - name: Content-Type
             value: application/json
@@ -854,15 +856,12 @@ collection:
             send: true
             store: true
           rebuildPath: true
-        pathParameters:
-          - name: id
-            value: ""
-      - url: http://localhost:3000/receitas/excluir/:id
+      - url: http://localhost:3000/receita/excluir/2
         name: Excluir
         meta:
           id: req_58426c4c7f3f4896b5329d9c8df758dc
           created: 1791987606942
-          modified: 1791988161115
+          modified: 1792156146465
           isPrivate: false
           description: ""
           sortKey: -1788809740265.625
@@ -875,9 +874,6 @@ collection:
             send: true
             store: true
           rebuildPath: true
-        pathParameters:
-          - name: id
-            value: ""
 cookieJar:
   name: Default Jar
   meta:
